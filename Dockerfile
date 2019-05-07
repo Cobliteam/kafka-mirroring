@@ -1,17 +1,22 @@
 FROM cobli/kafka-topic-mirror as topic-mirror
 
+FROM giogt/kafka-mirror-maker:2.0.0 as giogt
 
-FROM giogt/kafka-mirror-maker:2.0.0
+
+FROM confluentinc/cp-kafka:5.2.1
 
 RUN sed -i "s/^deb.\+deb\.debian\.org\/debian.\+jessie-updates.\+main//" /etc/apt/sources.list
 RUN sed -i "s/deb\.debian\.org/archive.debian.org/" /etc/apt/sources.list
 
 RUN apt-get update && apt-get install -y \
         supervisor \
-        strace \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /app
+
+COPY --from=giogt /etc/giogt/ /etc/giogt/
+ENV COMPONENT=kafka-mirror-maker
+RUN mkdir -p /etc/"${COMPONENT}"
 
 COPY --from=topic-mirror /app/kafka-topic-mirror.jar /app/
 COPY --from=topic-mirror /app/entrypoint.sh /app/kafka-topic-mirror.sh
