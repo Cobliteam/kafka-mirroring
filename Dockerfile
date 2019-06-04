@@ -1,20 +1,22 @@
-FROM cobli/kafka-topic-mirror as topic-mirror
+FROM cobli/kafka-topic-mirror:0.0.1 as topic-mirror
 
-FROM giogt/kafka-mirror-maker:2.0.0 as giogt
+FROM giogt/kafka-mirror-maker:2.0.0 as mirror-maker
 
 
 FROM confluentinc/cp-kafka:5.2.1
 
+# jessie repos are archived: we need to change repos URL and remove updates entry
+# in order to keep apt working
 RUN sed -i "s/^deb.\+deb\.debian\.org\/debian.\+jessie-updates.\+main//" /etc/apt/sources.list
 RUN sed -i "s/deb\.debian\.org/archive.debian.org/" /etc/apt/sources.list
 
-RUN apt-get update && apt-get install -y \
-        supervisor \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        supervisor=3.* \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /app
 
-COPY --from=giogt /etc/giogt/ /etc/giogt/
+COPY --from=mirror-maker /etc/giogt/ /etc/giogt/
 ENV COMPONENT=kafka-mirror-maker
 RUN mkdir -p /etc/"${COMPONENT}"
 

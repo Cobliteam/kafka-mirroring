@@ -16,7 +16,7 @@ docker-compose exec kafka010\
     --replication-factor 1 --partitions 3 --if-not-exists
 
 echo "producing a test message"
-echo "test" | docker exec -i $(docker-compose ps -q kafka010)\
+echo "test" | docker exec -i "$(docker-compose ps -q kafka010)"\
     kafka-console-producer --broker-list kafka010:9092 --topic test
 
 echo "consuming test message"
