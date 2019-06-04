@@ -5,6 +5,8 @@ set -e
 #trap crtl+c on docker run
 trap 'exit 1' INT
 
+CHECK_NEW_TOPICS_INTERVAL=10
+
 function main {
 
     validate_variable "MIRROR_MAKER_CONSUMER_ZOOKEEPER_CONNECT"
@@ -42,7 +44,7 @@ function main {
             else
                 echo "waiting for topic creation.."
                 ensure_mirror_maker_running
-                sleep 10
+                sleep ${CHECK_NEW_TOPICS_INTERVAL}
             fi
     done
 }
