@@ -7,6 +7,7 @@ x-zoo-healthcheck: &zoo-healthcheck
   retries: 30
 
 x-kafka-healthcheck: &kafka-healthcheck
+  # just a template for any kafka container (override xxx with zookeeper hostname)
   test: ["CMD", "kafka-topics", "--list", "--zookeeper", "xxx"]
   interval: 5s
   timeout: 10s
