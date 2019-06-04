@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+set -e
+set -x
+
 ctnr_name=$(docker-compose ps -q $1)
 
 while true; do

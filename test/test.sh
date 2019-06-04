@@ -3,12 +3,14 @@
 set -e
 set -x
 
+DOCKER_UP_TIMEOUT=300
+
 echo "setting up test environment"
 docker-compose up -d kafka010 kafka210
-timeout 20 ./docker-compose-healthycheck.sh kafka010
-timeout 20 ./docker-compose-healthycheck.sh kafka210
+timeout ${DOCKER_UP_TIMEOUT} ./docker-compose-healthycheck.sh kafka010
+timeout ${DOCKER_UP_TIMEOUT} ./docker-compose-healthycheck.sh kafka210
 docker-compose up -d kafka-mirroring
-timeout 60 ./docker-compose-healthycheck.sh kafka-mirroring
+timeout ${DOCKER_UP_TIMEOUT} ./docker-compose-healthycheck.sh kafka-mirroring
 
 echo "creating test topic"
 docker-compose exec kafka010\

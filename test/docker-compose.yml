@@ -4,13 +4,13 @@ x-zoo-healthcheck: &zoo-healthcheck
   test: ["CMD", "echo", "srvr", "|", "nc", "-w", "1", "127.0.0.1","2181","|", "grep", "-qi", "zookeeper"]
   interval: 5s
   timeout: 1s
-  retries: 5
+  retries: 30
 
 x-kafka-healthcheck: &kafka-healthcheck
   test: ["CMD", "kafka-topics", "--list", "--zookeeper", "xxx"]
   interval: 5s
   timeout: 10s
-  retries: 6
+  retries: 30
 
 
 services:
