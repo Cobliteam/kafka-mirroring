@@ -1,0 +1,12 @@
+sudo: false
+
+language: minimal
+
+services:
+  - docker
+
+script:
+  - cd test
+  - ./test.sh
+
+
